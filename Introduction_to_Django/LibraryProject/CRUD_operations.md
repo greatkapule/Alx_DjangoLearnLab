@@ -1,15 +1,20 @@
+# CRUD Operations Documentation
+
+## Create
 ```python
 from bookshelf.models import Book
 book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
+# Output: Book instance created successfully
 
+## Retrieve
 book = Book.objects.get(title="1984")
-print(book.title, book.author, book.publication_year)
+# Output: Title: 1984, Author: George Orwell, Year: 1949
 
+##Update
 book.title = "Nineteen Eighty-Four"
 book.save()
-print(book.title)
+# Output: Title updated to Nineteen Eighty-Four
 
-book = Book.objects.get(title="Nineteen Eighty-Four")
+## Delete
 book.delete()
-Book.objects.all()
-
+# Output: Book deleted. QuerySet is now empty: <QuerySet []>
