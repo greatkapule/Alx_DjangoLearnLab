@@ -1,4 +1,7 @@
-from bookshelf.models import Book
-book = Book.objects.get(title="1984")
-book.title = "Nineteen Eighty-Four"
-book.save()
+# Update Operation
+
+```python
+book1.title = "Nineteen Eighty-Four"
+book1.save()
+book1
+# Output: <Book: Nineteen Eighty-Four by George Orwell (1949)>
