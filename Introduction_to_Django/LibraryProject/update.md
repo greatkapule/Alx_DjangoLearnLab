@@ -1,7 +1,9 @@
 # Update Operation
+Command:
+book = Book.objects.get(title="1984")
+book.title = "Nineteen Eighty-Four"
+book.save()
+print(book.title)
 
-```python
-book1.title = "Nineteen Eighty-Four"
-book1.save()
-book1
-# Output: <Book: Nineteen Eighty-Four by George Orwell (1949)>
+Output:
+# Nineteen Eighty-Four

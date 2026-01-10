@@ -1,6 +1,7 @@
 # Retrieve Operation
+Command:
+book = Book.objects.get(title="1984")
+print(book.title, book.author, book.publication_year)
 
-```python
-books = Book.objects.all()
-books
-# Output: <QuerySet [<Book: 1984 by George Orwell (1949)>]>
+Output:
+# 1984 George Orwell 1949
