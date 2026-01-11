@@ -16,5 +16,7 @@ book.save()
 # Output: Title updated to Nineteen Eighty-Four
 
 ## Delete
+```python
+book = Book.objects.get(title="Nineteen Eighty-Four")
 book.delete()
-# Output: Book deleted. QuerySet is now empty: <QuerySet []>
+# Expected Output: Book deleted. QuerySet is now empty: <QuerySet []>
