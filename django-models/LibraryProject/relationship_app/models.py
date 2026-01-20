@@ -3,20 +3,30 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# --- Original Models ---
+# 1. Author Model
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
+# 2. Book Model (Updated with Custom Permissions)
 class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
 
+    class Meta:
+        # These custom permissions are required for Task 4
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
+        ]
+
     def __str__(self):
         return self.title
 
+# 3. Library Model
 class Library(models.Model):
     name = models.CharField(max_length=100)
     books = models.ManyToManyField(Book, related_name='libraries')
@@ -24,6 +34,7 @@ class Library(models.Model):
     def __str__(self):
         return self.name
 
+# 4. Librarian Model
 class Librarian(models.Model):
     name = models.CharField(max_length=100)
     library = models.OneToOneField(Library, on_delete=models.CASCADE, related_name='librarian')
@@ -31,7 +42,7 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
 
-# --- New UserProfile Model for RBAC ---
+# 5. UserProfile Model (For Role-Based Access Control)
 class UserProfile(models.Model):
     ROLE_CHOICES = (
         ('Admin', 'Admin'),
@@ -44,7 +55,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
-# --- Signals to automatically create UserProfile ---
+# 6. Signals (Automatically creates a UserProfile when a User is registered)
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
