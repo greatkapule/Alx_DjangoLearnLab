@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.views.generic.detail import DetailView
 from .models import Book, Library, UserProfile
 
-# --- Task 1: Basic Views ---
+# --- Task 1: MUST HAVE THIS VIEW ---
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -27,7 +27,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
 
-# --- Task 3: Role-Based Access Control ---
+# --- Task 3: Role-Based Views ---
 def is_admin(user):
     return user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
