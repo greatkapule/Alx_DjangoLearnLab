@@ -1,6 +1,17 @@
-<!-- bookshelf/templates/bookshelf/form_example.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Form</title>
+</head>
+<body>
+
+<h2>Secure Form Example</h2>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit">
+    <button type="submit">Submit</button>
 </form>
+
+</body>
+</html>

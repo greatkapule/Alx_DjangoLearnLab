@@ -4,19 +4,19 @@ from .models import Book
 from .forms import BookForm, BookSearchForm, ExampleForm  
 
 # VIEW: List all books
-# This view lists all books in the library.
-# Permission check: Only users with 'can_view' permission can access.
-# Safe ORM: Uses Django's ORM to fetch all books (prevents raw SQL usage)
+# Lists all books in the library.
+# Permission: Only users with 'can_view' permission can access.
+# Safe ORM: Uses Django ORM to fetch all books, preventing raw SQL usage.
 @permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
-    books = Book.objects.all()  # safe ORM query
+    books = Book.objects.all()  # Safe ORM query
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
 # VIEW: Search books
-# This view allows users to search books by title.
-# Permission check: Only users with 'can_view' permission can search.
-# Safe ORM: Uses filter() with parameterized queries to prevent SQL injection.
-# CSRF protection is automatically enforced in the template using {% csrf_token %}
+# Allows users to search books by title.
+# Permission: Only users with 'can_view' permission can search.
+# Safe ORM: filter() with parameterized queries prevents SQL injection.
+# CSRF protection: Ensured in template with {% csrf_token %}
 @permission_required('bookshelf.can_view', raise_exception=True)
 def search_books(request):
     form = BookSearchForm(request.GET or None)
@@ -24,23 +24,22 @@ def search_books(request):
 
     if form.is_valid():
         user_input = form.cleaned_data['title']
-        # Safe query: prevents SQL injection by using Django ORM
+        # Safe query using ORM
         books = Book.objects.filter(title__icontains=user_input)
 
     return render(request, 'bookshelf/book_list.html', {'books': books, 'form': form})
 
-
 # VIEW: Create a book
-# This view handles creating a new book.
-# Permission check: Only users with 'can_create' permission can create books.
-# CSRF protection: The template form must include {% csrf_token %} to prevent CSRF attacks.
-# Form validation: Ensures user input is safe and correctly formatted.
+# Handles creating a new book.
+# Permission: Only users with 'can_create' permission can create books.
+# CSRF protection: Template form must include {% csrf_token %}.
+# Form validation: Ensures input is safe and properly formatted.
 @permission_required('bookshelf.can_create', raise_exception=True)
 def create_book(request):
     if request.method == "POST":
         form = BookForm(request.POST)
         if form.is_valid():
-            form.save()  # Safe: input validated and saved via ORM
+            form.save()  # Safe ORM insertion
             return redirect('list_books')
     else:
         form = BookForm()
@@ -48,13 +47,13 @@ def create_book(request):
     return render(request, 'bookshelf/form_example.html', {'form': form})
 
 # VIEW: Edit a book
-# This view allows editing an existing book.
-# Permission check: Only users with 'can_edit' permission can edit books.
-# CSRF protection: Handled by including {% csrf_token %} in the template.
-# Form validation: Ensures changes are safe before saving.
+# Allows editing an existing book.
+# Permission: Only users with 'can_edit' permission can edit books.
+# CSRF protection: Template includes {% csrf_token %}.
+# Form validation: Ensures safe updates.
 @permission_required('bookshelf.can_edit', raise_exception=True)
 def edit_book(request, pk):
-    book = get_object_or_404(Book, pk=pk)  # Safe retrieval; 404 if book does not exist
+    book = get_object_or_404(Book, pk=pk)  # Safe retrieval
     if request.method == "POST":
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
@@ -66,10 +65,10 @@ def edit_book(request, pk):
     return render(request, 'bookshelf/form_example.html', {'form': form, 'book': book})
 
 # VIEW: Delete a book
-# This view allows deleting an existing book.
-# Permission check: Only users with 'can_delete' permission can delete books.
-# CSRF protection: Template must include {% csrf_token %} to confirm deletion.
-# Safe ORM: Deletion is done through Django ORM.
+# Allows deleting an existing book.
+# Permission: Only users with 'can_delete' permission can delete books.
+# CSRF protection: Template includes {% csrf_token %}.
+# Safe ORM: Deletion is done via Django ORM.
 @permission_required('bookshelf.can_delete', raise_exception=True)
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)  # Safe retrieval
@@ -80,7 +79,9 @@ def delete_book(request, pk):
     # GET request renders a confirmation page
     return render(request, 'bookshelf/confirm_delete.html', {'book': book})
 
+# VIEW: ExampleForm
+# Dummy view to ensure ExampleForm exists and can be rendered.
+# Permission: Optional; accessible to any user for demonstration.
 def example_view(request):
-    # Simple view to render ExampleForm
     form = ExampleForm()
     return render(request, 'bookshelf/form_example.html', {'form': form})
