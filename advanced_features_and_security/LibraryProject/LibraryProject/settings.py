@@ -123,3 +123,36 @@ CSP_SCRIPT_SRC = ("'self'",)
 # Only allow CSS/styles to be loaded from the same origin
 CSP_STYLE_SRC = ("'self'",)
 
+# --- HTTPS Settings ---
+
+# 1. Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# 2. HTTP Strict Transport Security (HSTS)
+# Instructs the browser to only use HTTPS for the next year
+SECURE_HSTS_SECONDS = 31536000  
+
+# 3. Include subdomains in the HSTS policy
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# 4. Allow the site to be submitted to the browser preload list
+SECURE_HSTS_PRELOAD = True
+
+# --- Cookie Security ---
+
+# Ensure session cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+
+# Ensure CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+# --- Secure HTTP Headers ---
+
+# Prevent the site from being embedded in an iframe (Anti-Clickjacking)
+X_FRAME_OPTIONS = 'DENY'
+
+# Prevent the browser from guessing the content type (MIME sniffing)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable the browser's built-in XSS filter
+SECURE_BROWSER_XSS_FILTER = True
