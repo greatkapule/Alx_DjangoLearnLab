@@ -79,3 +79,8 @@ def delete_book(request, pk):
 
     # GET request renders a confirmation page
     return render(request, 'bookshelf/confirm_delete.html', {'book': book})
+
+def example_view(request):
+    # Simple view to render ExampleForm
+    form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
