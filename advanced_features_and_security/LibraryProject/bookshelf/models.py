@@ -1,13 +1,13 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-# 1. Define the Manager FIRST in the same file
+# 1. Custom User Manager
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
             raise ValueError("The Username must be set")
         if not email:
-            raise ValueError("The Email must be set") # Added for security requirements
+            raise ValueError("The Email must be set")
 
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
@@ -22,7 +22,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(username, email, password, **extra_fields)
 
-# 2. Define the Model SECOND
+# 2. Custom User Model
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
@@ -31,3 +31,21 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+# 3. Book Model with Custom Permissions (Mandatory Step)
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    publication_year = models.IntegerField()
+
+    class Meta:
+        # These are the specific permission names requested in your task
+        permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
+
+    def __str__(self):
+        return self.title
