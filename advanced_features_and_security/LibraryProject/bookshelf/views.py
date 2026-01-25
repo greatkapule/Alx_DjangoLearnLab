@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Book
-from .forms import BookSearchForm, BookForm  
+from .forms import BookForm, BookSearchForm, ExampleForm  
 
 # VIEW: List all books
 # This view lists all books in the library.

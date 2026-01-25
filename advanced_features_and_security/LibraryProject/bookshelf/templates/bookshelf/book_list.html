@@ -1,0 +1,16 @@
+<!-- bookshelf/templates/bookshelf/book_list.html -->
+<h1>Book List</h1>
+
+<form method="get">
+    {% csrf_token %}
+    {{ form.title.label_tag }} {{ form.title }}
+    <input type="submit" value="Search">
+</form>
+
+<ul>
+    {% for book in books %}
+        <li>{{ book.title }}</li>
+    {% empty %}
+        <li>No books found.</li>
+    {% endfor %}
+</ul>

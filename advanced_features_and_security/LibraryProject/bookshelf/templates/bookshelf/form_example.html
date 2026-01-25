@@ -1,5 +1,6 @@
-<form method="POST">
+<!-- bookshelf/templates/bookshelf/form_example.html -->
+<form method="post">
     {% csrf_token %}
-    <!-- your input fields -->
+    {{ form.as_p }}
     <input type="submit" value="Submit">
 </form>
