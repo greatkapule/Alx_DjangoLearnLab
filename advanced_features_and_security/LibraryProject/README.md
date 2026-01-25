@@ -1,17 +1,20 @@
-# LibraryProject
+# Managing Permissions and Groups in Django
 
-This project is part of the ALX Django Learn Lab.
+This project implements role-based access control using Django permissions and groups.
 
-## Objective
-To set up a Django development environment, create a Django project, and run the development server successfully.
+## Custom Permissions
+The following custom permissions are defined in the Book model:
+- can_view
+- can_create
+- can_edit
+- can_delete
 
-## Project Structure
-- manage.py: Command-line utility for Django project interaction
-- settings.py: Project configuration
-- urls.py: URL routing configuration
+## Groups Configuration
+The following groups are used:
+- Viewers: can_view
+- Editors: can_view, can_create, can_edit
+- Admins: can_view, can_create, can_edit, can_delete
 
-## How to Run
-1. Install Django
-2. Navigate to the project directory
-3. Run `python manage.py runserver`
-4. Open http://127.0.0.1:8000/ in your browser
+## Permission Enforcement
+Access control is enforced in views using Django's permission_required decorator.
+Only users with the appropriate permissions can view, create, edit, or delete books.
