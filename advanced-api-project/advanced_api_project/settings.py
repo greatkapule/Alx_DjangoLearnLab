@@ -120,3 +120,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+REST_FRAMEWORK = {
+    # Enables filtering, searching, and ordering by default
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',  # for filtering
+        'rest_framework.filters.SearchFilter',                # for search
+        'rest_framework.filters.OrderingFilter',             # for ordering
+    ],
+}
