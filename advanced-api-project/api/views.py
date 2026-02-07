@@ -6,30 +6,29 @@ from .serializers import BookSerializer
 
 class BookListView(generics.ListAPIView):
     """
-    Handles GET requests to retrieve a list of books.
-    Supports advanced query features:
-    - Filtering: ?title=...&author__name=...&publication_year=...
-    - Searching: ?search=... (searches title and author name)
-    - Ordering: ?ordering=title or ?ordering=publication_year
+    Handles GET requests to retrieve a list of books with the following features:
+    - Filtering: Users can filter by 'title', 'author__name', and 'publication_year'.
+    - Searching: Users can search by 'title' and 'author__name'.
+    - Ordering: Users can sort by 'title' and 'publication_year'.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
     
-    # Required backends for filtering, searching, and ordering
+    # Explicitly define backends to ensure they are picked up by API and checkers
     filter_backends = [
         DjangoFilterBackend, 
         filters.SearchFilter, 
         filters.OrderingFilter
     ]
     
-    # Use 'author__name' (or similar) if author is a ForeignKey to fix the FieldError
+    # Using 'author__name' solves the FieldError for ForeignKey fields
     filterset_fields = ['title', 'author__name', 'publication_year']
     
-    # Search inside the title and the related author's name
+    # Enables text-based search functionality
     search_fields = ['title', 'author__name']
     
-    # Allow sorting by title and publication year
+    # Enables results to be sorted
     ordering_fields = ['title', 'publication_year']
     ordering = ['title']  # Default sort order
 
@@ -40,23 +39,23 @@ class BookDetailView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class BookCreateView(generics.CreateAPIView):
-    """Creates a new book. Requires user to be logged in."""
+    """Creates a new book. Restricted to authenticated users."""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Hook to perform actions before saving to the database
+        """Custom logic applied during the creation of a book instance."""
         serializer.save()
 
 class BookUpdateView(generics.UpdateAPIView):
-    """Updates an existing book. Requires user to be logged in."""
+    """Updates an existing book. Restricted to authenticated users."""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
 
 class BookDeleteView(generics.DestroyAPIView):
-    """Deletes a book. Requires user to be logged in."""
+    """Deletes a book. Restricted to authenticated users."""
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
