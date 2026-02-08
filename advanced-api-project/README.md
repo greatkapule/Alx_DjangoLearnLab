@@ -74,3 +74,30 @@ You can combine multiple parameters:
 Example: `/api/books/?search=Python&publication_year__gt=2015&ordering=-publication_year`
 
 This searches for "Python", filters books after 2015, and orders by publication year (newest first).
+
+## Testing
+
+### Running Tests
+
+The project includes comprehensive unit tests for all API endpoints.
+```bash
+# Run all tests
+python manage.py test api
+
+# Run with verbose output
+python manage.py test api --verbosity=2
+```
+
+### Test Coverage
+
+Tests cover:
+- CRUD operations (Create, Read, Update, Delete)
+- Filtering by title, author, and publication year
+-  Searching across title and author fields
+-  Ordering by title and publication year
+-  Authentication and permission enforcement
+-  Combined query operations
+
+### Test Documentation
+
+For detailed testing documentation, see `api/TEST_DOCUMENTATION.md`
