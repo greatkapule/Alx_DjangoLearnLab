@@ -1,12 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Django Blog</title>
-    </head>
+    <title>{% block title %}Django Blog{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
 <body>
+
     <header>
         <h1>My Awesome Django Blog</h1>
+        <nav>
+            <a href="{% url 'login' %}">Login</a> |
+            <a href="{% url 'register' %}">Register</a>
+        </nav>
     </header>
 
     <main>
@@ -17,5 +24,7 @@
     <footer>
         <p>&copy; 2026 My Blog</p>
     </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 </html>
