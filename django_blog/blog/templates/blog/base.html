@@ -11,8 +11,17 @@
     <header>
         <h1>My Awesome Django Blog</h1>
         <nav>
-            <a href="{% url 'login' %}">Login</a> |
-            <a href="{% url 'register' %}">Register</a>
+            {% if user.is_authenticated %}
+                <form action="{% url 'blog:logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background:none;border:none;color:#000;cursor:pointer;padding:0;">Logout</button>
+                </form>
+                |
+                <a href="{% url 'blog:profile' %}">Profile</a>
+            {% else %}
+                <a href="{% url 'blog:login' %}">Login</a> |
+                <a href="{% url 'blog:register' %}">Register</a>
+            {% endif %}
         </nav>
     </header>
 

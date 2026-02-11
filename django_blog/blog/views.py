@@ -1,64 +1,86 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, UserUpdateForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Post
 
 
+# USER REGISTRATION
 def register(request):
-    """
-    Handle user registration.
-    
-    How it works:
-    1. User visits the page (GET request) - Show empty form
-    2. User submits the form (POST request) - Process the data
-    3. If valid, create account and redirect to login
-    4. If invalid, show errors
-    """
+    """Handle user registration."""
     if request.method == 'POST':
-        # User submitted the form
         form = CustomUserCreationForm(request.POST)
-        
         if form.is_valid():
-            # Form data is valid, create the user
             user = form.save()
             username = form.cleaned_data.get('username')
-            
-            # Show success message
             messages.success(request, f'Account created for {username}! You can now log in.')
-            
-            # Redirect to login page
-            return redirect('login')
+            return redirect('blog:login')  # namespace added
     else:
-        # User is visiting the page (GET request)
         form = CustomUserCreationForm()
-    
-    # Render the template with the form
     return render(request, 'blog/register.html', {'form': form})
 
 
 @login_required
 def profile(request):
-    """
-    Display and handle user profile updates.
-    
-    @login_required decorator ensures only logged-in users can access this view.
-    
-    How it works:
-    1. User visits profile (GET) - Show current information
-    2. User updates profile (POST) - Save changes
-    """
+    """Display and handle user profile updates."""
     if request.method == 'POST':
-        # User is updating their profile
         form = UserUpdateForm(request.POST, instance=request.user)
-        
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile has been updated!')
-            return redirect('profile')
+            return redirect('blog:profile')  # namespace added
     else:
-        # Show current profile information
         form = UserUpdateForm(instance=request.user)
-    
     return render(request, 'blog/profile.html', {'form': form})
 
+
+# BLOG POST VIEWS 
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'blog:login'          # redirect if not logged in
+    redirect_field_name = 'next'
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    login_url = 'blog:login'
+    redirect_field_name = 'next'
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # only author can edit
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    login_url = 'blog:login'
+    redirect_field_name = 'next'
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('blog:post-list')  # namespace included
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # only author can delete

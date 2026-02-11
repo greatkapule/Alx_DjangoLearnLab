@@ -21,3 +21,18 @@ It includes user registration, login, logout, and profile management.
 1. Run the server:
    ```bash
    python3 manage.py runserver
+
+## Blog Post Management
+
+### Features
+- Create, read, update, delete blog posts
+- Only authenticated users can create posts
+- Only authors can edit or delete their posts
+
+### URLs
+- /posts/ → list posts
+- /posts/new/ → create post
+- /posts/<id>/ → view post
+- /posts/<id>/edit/ → edit post
+- /posts/<id>/delete/ → delete post
+
