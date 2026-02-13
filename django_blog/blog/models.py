@@ -2,7 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+
 class Post(models.Model):
+    """Model representing a blog post"""
     title = models.CharField(max_length=200)
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
@@ -16,4 +18,5 @@ class Post(models.Model):
         return self.title
     
     def get_absolute_url(self):
+        """Returns the URL to access a particular post instance"""
         return reverse('post-detail', kwargs={'pk': self.pk})
