@@ -1,26 +1,14 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
-from . import views
 from .views import (
-    PostListView,
-    PostDetailView,
-    PostCreateView,
-    PostUpdateView,
-    PostDeleteView,
+    PostListView, 
+    PostDetailView, 
+    PostCreateView, 
+    PostUpdateView, 
+    PostDeleteView
 )
 
-app_name = 'blog'
-
 urlpatterns = [
-    # Authentication
-    path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='blog/logout.html'), name='logout'),
-
-    # User Profile
-    path('profile/', views.profile, name='profile'),
-
-    # Blog Posts 
+    path('', PostListView.as_view(), name='post-list'),
     path('posts/', PostListView.as_view(), name='post-list'),
     path('posts/new/', PostCreateView.as_view(), name='post-create'),
     path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
