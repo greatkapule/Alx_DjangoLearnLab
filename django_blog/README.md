@@ -22,17 +22,70 @@ It includes user registration, login, logout, and profile management.
    ```bash
    python3 manage.py runserver
 
-## Blog Post Management
+# Django Blog - CRUD Application
 
-### Features
-- Create, read, update, delete blog posts
-- Only authenticated users can create posts
-- Only authors can edit or delete their posts
+## Overview
+A full-featured blog application built with Django and PostgreSQL that allows users to create, read, update, and delete blog posts.
 
-### URLs
-- /posts/ → list posts
-- /posts/new/ → create post
-- /posts/<id>/ → view post
-- /posts/<id>/edit/ → edit post
-- /posts/<id>/delete/ → delete post
+## Features
+- **Create Posts**: Authenticated users can create new blog posts
+- **Read Posts**: All users can view blog posts
+- **Update Posts**: Authors can edit their own posts
+- **Delete Posts**: Authors can delete their own posts
+- **User Authentication**: Login/logout functionality
+- **Permissions**: Only post authors can edit/delete their posts
+
+## Technology Stack
+- **Backend**: Django 5.x
+- **Database**: PostgreSQL
+- **Frontend**: HTML, CSS (no JavaScript framework)
+
+## Installation
+
+### Prerequisites
+- Python 3.8+
+- PostgreSQL
+- pip
+
+### Setup Steps
+1. Clone the repository
+2. Create virtual environment: `python -m venv venv`
+3. Activate virtual environment
+4. Install dependencies: `pip install -r requirements.txt`
+5. Create PostgreSQL database
+6. Update database settings in `settings.py`
+7. Run migrations: `python manage.py migrate`
+8. Create superuser: `python manage.py createsuperuser`
+9. Run server: `python manage.py runserver`
+
+## URL Patterns
+- `/` - List all posts
+- `/posts/` - List all posts
+- `/posts/new/` - Create new post (requires login)
+- `/posts/<id>/` - View post details
+- `/posts/<id>/edit/` - Edit post (requires author)
+- `/posts/<id>/delete/` - Delete post (requires author)
+
+## Permissions
+- **List & Detail Views**: Public access
+- **Create View**: Requires authentication
+- **Update & Delete Views**: Requires authentication + author ownership
+
+## Models
+
+### Post
+- `title`: CharField (max 200 characters)
+- `content`: TextField
+- `author`: ForeignKey to User
+- `created_at`: DateTimeField (auto)
+- `updated_at`: DateTimeField (auto)
+
+## Testing
+- Test all CRUD operations
+- Verify permissions (non-authors cannot edit/delete)
+- Test form validation
+- Verify navigation between pages
+
+## Author
+Created for ALX Django Learning Lab
 
