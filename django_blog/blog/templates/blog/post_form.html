@@ -1,15 +1,35 @@
-{% extends "blog/base.html" %}
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Edit Post{% else %}Create New Post{% endif %}
+{% endblock %}
 
 {% block content %}
-    <div style="background: white; padding: 30px; border-radius: 8px; max-width: 800px; margin: 0 auto;">
-        <h2>{% if form.instance.pk %}Update Post{% else %}New Post{% endif %}</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form.as_p }}
+    <h1>{% if form.instance.pk %}Edit Post{% else %}Create New Post{% endif %}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>Please correct the errors below:</strong>
+                {{ form.errors }}
             </div>
-            <button type="submit" class="btn">Save Post</button>
-            <a href="{% url 'post-list' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-    </div>
+        {% endif %}
+        
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.title.id_for_label }}">Title:</label>
+            {{ form.title }}
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="{{ form.content.id_for_label }}">Content:</label>
+            {{ form.content }}
+        </div>
+        
+        <button type="submit" class="btn">
+            {% if form.instance.pk %}Update{% else %}Create{% endif %} Post
+        </button>
+        <a href="{% url 'post-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
 {% endblock %}

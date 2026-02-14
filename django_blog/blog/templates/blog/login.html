@@ -3,23 +3,10 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto;">
     <h2>Login</h2>
-    
-    <form method="post" style="margin-top: 20px;">
+    <form method="post">
         {% csrf_token %}
-        
-        <div class="form-group">
-            <label>Username</label>
-            {{ form.username }}
-        </div>
-        
-        <div class="form-group">
-            <label>Password</label>
-            {{ form.password }}
-        </div>
-        
+        {{ form.as_p }}
         <button type="submit" class="btn">Login</button>
     </form>
-</div>
 {% endblock %}

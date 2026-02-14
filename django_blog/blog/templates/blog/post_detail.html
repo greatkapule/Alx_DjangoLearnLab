@@ -1,20 +1,29 @@
-{% extends "blog/base.html" %}
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <article style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h1>{{ object.title }}</h1>
-        <p class="text-muted">Posted by {{ object.author }} on {{ object.published_date }}</p>
-        <hr>
-        <div style="margin: 20px 0;">
-            {{ object.content|linebreaks }}
-        </div>
-        
-        {% if object.author == user %}
-            <div style="margin-top: 30px;">
-                <a href="{% url 'post-update' object.id %}" class="btn">Edit Post</a>
-                <a href="{% url 'post-delete' object.id %}" class="btn btn-danger">Delete Post</a>
-            </div>
+    <h1>{{ post.title }}</h1>
+    
+    <p style="color: #666; font-size: 0.9em; margin-bottom: 20px;">
+        By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}
+        {% if post.created_at != post.updated_at %}
+            | Updated: {{ post.updated_at|date:"F d, Y" }}
         {% endif %}
-        <a href="{% url 'post-list' %}" class="btn btn-secondary" style="margin-top: 10px;">Back to Feed</a>
-    </article>
+    </p>
+    
+    <div style="line-height: 1.8; margin: 20px 0;">
+        {{ post.content|linebreaks }}
+    </div>
+    
+    {% if user == post.author %}
+        <div style="margin-top: 30px;">
+            <a href="{% url 'post-update' post.pk %}" class="btn">Edit Post</a>
+            <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete Post</a>
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'post-list' %}" class="btn btn-secondary">Back to Posts</a>
+    </div>
 {% endblock %}
