@@ -1,46 +1,14 @@
-{# Template for listing all blog posts #}
-{% extends 'blog/base.html' %}
-
-{% block title %}Blog Posts{% endblock %}
+{% extends "blog/base.html" %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <h2>All Blog Posts</h2>
-    {% if user.is_authenticated %}
-        <a href="{% url 'post-create' %}" class="btn">Create New Post</a>
-    {% endif %}
-</div>
-
-<div>
+    <h2>Latest Blog Posts</h2>
+    <hr>
     {% for post in posts %}
-        <article style="background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            <h3><a href="{% url 'post-detail' post.pk %}" style="color: #2c3e50; text-decoration: none;">{{ post.title }}</a></h3>
-            <p style="color: #7f8c8d; font-size: 0.9rem; margin: 10px 0;">
-                By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}
-            </p>
-            <p style="color: #555;">{{ post.content|truncatewords:50 }}</p>
-            <a href="{% url 'post-detail' post.pk %}" class="btn btn-secondary" style="margin-top: 10px;">Read More</a>
-        </article>
-    {% empty %}
-        <p>No posts available yet.</p>
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h3><a href="{% url 'post-detail' post.id %}" style="color: #2c3e50; text-decoration: none;">{{ post.title }}</a></h3>
+            <small>By <strong>{{ post.author }}</strong> on {{ post.published_date|date:"F d, Y" }}</small>
+            <p style="margin-top: 10px;">{{ post.content|truncatewords:30 }}</p>
+            <a href="{% url 'post-detail' post.id %}" class="btn" style="margin-top: 10px;">Read More</a>
+        </div>
     {% endfor %}
-</div>
-
-{% if is_paginated %}
-    <div style="margin-top: 20px;">
-        {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-secondary">First</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-secondary">Previous</a>
-        {% endif %}
-        
-        <span style="margin: 0 10px;">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        </span>
-        
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-secondary">Next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-secondary">Last</a>
-        {% endif %}
-    </div>
-{% endif %}
 {% endblock %}

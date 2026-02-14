@@ -1,31 +1,20 @@
-{# Template for displaying a single blog post #}
-{% extends 'blog/base.html' %}
-
-{% block title %}{{ post.title }}{% endblock %}
+{% extends "blog/base.html" %}
 
 {% block content %}
-<article style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <h2>{{ post.title }}</h2>
-    <p style="color: #7f8c8d; margin: 10px 0;">
-        By {{ post.author.username }} | {{ post.created_at|date:"F d, Y" }}
-        {% if post.created_at != post.updated_at %}
-            | Updated: {{ post.updated_at|date:"F d, Y" }}
-        {% endif %}
-    </p>
-    
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid #eee;">
-    
-    <div style="line-height: 1.8; color: #333;">
-        {{ post.content|linebreaks }}
-    </div>
-    
-    <div style="margin-top: 30px;">
-        <a href="{% url 'post-list' %}" class="btn btn-secondary">Back to Posts</a>
+    <article style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h1>{{ object.title }}</h1>
+        <p class="text-muted">Posted by {{ object.author }} on {{ object.published_date }}</p>
+        <hr>
+        <div style="margin: 20px 0;">
+            {{ object.content|linebreaks }}
+        </div>
         
-        {% if user == post.author %}
-        <a href="{% url 'post-edit' post.pk %}" class="btn">Edit</a>
-            <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete</a>
+        {% if object.author == user %}
+            <div style="margin-top: 30px;">
+                <a href="{% url 'post-update' object.id %}" class="btn">Edit Post</a>
+                <a href="{% url 'post-delete' object.id %}" class="btn btn-danger">Delete Post</a>
+            </div>
         {% endif %}
-    </div>
-</article>
+        <a href="{% url 'post-list' %}" class="btn btn-secondary" style="margin-top: 10px;">Back to Feed</a>
+    </article>
 {% endblock %}
