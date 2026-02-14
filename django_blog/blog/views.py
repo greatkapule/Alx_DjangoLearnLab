@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from django.urls import reverse_lazy
 
 # List View
 class PostListView(ListView):
@@ -17,6 +18,7 @@ class PostDetailView(DetailView):
 # Create View
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
+    template_name = 'blog/post_form.html'
     fields = ['title', 'content']
 
     def form_valid(self, form):
@@ -26,6 +28,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 # Update View
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
+    template_name = 'blog/post_form.html'
     fields = ['title', 'content']
 
     def form_valid(self, form):
@@ -39,7 +42,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 # Delete View
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    success_url = '/'
+    success_url = reverse_lazy('post-list')
 
     def test_func(self):
         post = self.get_object()
