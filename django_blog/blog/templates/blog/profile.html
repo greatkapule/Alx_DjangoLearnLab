@@ -1,9 +1,77 @@
-<h2>Your Profile</h2>
+{% extends 'blog/base.html' %}
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update Profile</button>
-</form>
+{% block title %}Profile - Django Blog{% endblock %}
 
-<a href="{% url 'logout' %}">Logout</a>
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h2 class="mb-0">👤 User Profile</h2>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h4>Welcome, <strong>{{ user.username }}</strong>!</h4>
+                        <p class="text-muted">Member since: {{ user.date_joined|date:"F d, Y" }}</p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <h5>📧 Email</h5>
+                                <p>{{ user.email|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <h5>📝 Posts</h5>
+                                <p>{{ user.post_set.count }} post{{ user.post_set.count|pluralize }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 class="mb-3">Quick Actions</h5>
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'post-create' %}" class="btn btn-primary">
+                                ✍️ Create New Post
+                            </a>
+                            <a href="{% url 'post_list' %}" class="btn btn-secondary">
+                                📚 View All Posts
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <h5 class="mb-3">Your Recent Posts</h5>
+                {% if user.post_set.all %}
+                    <div class="list-group">
+                        {% for post in user.post_set.all|slice:":5" %}
+                        <a href="{% url 'post-detail' post.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ post.title }}</h6>
+                                <small>{{ post.created_at|date:"M d, Y" }}</small>
+                            </div>
+                            <p class="mb-1 text-muted">{{ post.content|truncatewords:15 }}</p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You haven't created any posts yet. <a href="{% url 'post-create' %}">Create your first post!</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

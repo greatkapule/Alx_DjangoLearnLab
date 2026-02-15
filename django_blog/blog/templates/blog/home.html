@@ -1,0 +1,67 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Home - Django Blog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4">Welcome to Django Blog! 📝</h1>
+            <p class="lead">Share your thoughts, ideas, and stories with the world.</p>
+            <hr class="my-4">
+            <p>Create posts, add tags, search for content, and engage with the community through comments.</p>
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg me-2" href="{% url 'post_list' %}" role="button">
+                    📚 View All Posts
+                </a>
+                {% if user.is_authenticated %}
+                <a class="btn btn-success btn-lg" href="{% url 'post-create' %}" role="button">
+                    ✍️ Create New Post
+                </a>
+                {% else %}
+                <a class="btn btn-outline-secondary btn-lg" href="{% url 'register' %}" role="button">
+                    🚀 Get Started
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h3>🏷️ Tagging</h3>
+                <p class="card-text">Organize your posts with tags and discover content by topic.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h3>🔍 Search</h3>
+                <p class="card-text">Quickly find posts by searching titles, content, or tags.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <h3>💬 Comments</h3>
+                <p class="card-text">Engage with authors and readers through comments.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Posts Preview -->
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2 class="mb-4">Recent Posts</h2>
+        {% load static %}
+        <p class="text-muted">Check out the <a href="{% url 'post_list' %}">latest posts</a> from our community!</p>
+    </div>
+</div>
+{% endblock %}
