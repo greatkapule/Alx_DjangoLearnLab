@@ -22,7 +22,38 @@
             <a href="{% url 'post-delete' post.pk %}" class="btn btn-danger">Delete Post</a>
         </div>
     {% endif %}
+
+    <hr>
+
+    <h3>Comments ({{ post.comments.count }})</h3>
     
+    {% for comment in post.comments.all %}
+        <div class="comment" style="padding: 10px; border-bottom: 1px solid #eee;">
+            <p><strong>{{ comment.author.username }}</strong> <small class="text-muted">{{ comment.created_at|date:"F d, Y H:i" }}</small></p>
+            <p>{{ comment.content|linebreaks }}</p>
+            
+            {% if user == comment.author %}
+                <a href="{% url 'comment-update' comment.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <a href="{% url 'comment-delete' comment.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+        <div style="margin-top: 30px;">
+            <h4>Leave a Comment</h4>
+            <form method="POST" action="{% url 'add-comment' post.pk %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+        </div>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to leave a comment.</p>
+    {% endif %}
+
     <div style="margin-top: 20px;">
         <a href="{% url 'post-list' %}" class="btn btn-secondary">Back to Posts</a>
     </div>

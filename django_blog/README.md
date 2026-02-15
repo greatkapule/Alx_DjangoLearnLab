@@ -89,3 +89,10 @@ A full-featured blog application built with Django and PostgreSQL that allows us
 ## Author
 Created for ALX Django Learning Lab
 
+## Comment System
+
+- Add Comment: Authenticated users can comment on any post via the detail page.
+
+- Edit/Delete: Only the author of the comment can modify or remove it (enforced by UserPassesTestMixin).
+
+- Relationship: Uses a ForeignKey relationship between Post and Comment.
