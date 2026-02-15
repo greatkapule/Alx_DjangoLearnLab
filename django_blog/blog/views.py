@@ -8,11 +8,11 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
+from django.db.models import Q
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
-from django.db.models import Q
 
-# Authentication Views 
+# Authentication Views
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField(
@@ -57,7 +57,6 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    # Profile update logic usually requires a separate UserUpdateForm
     return render(request, 'blog/profile.html')
 
 def home_view(request):
@@ -73,7 +72,7 @@ class PostListView(ListView):
     paginate_by = 10
     
     def get_queryset(self):
-        return Post.objects.all().select_related('author')
+        return Post.objects.all().select_related('author').order_by('-created_at')
         
 class PostDetailView(DetailView):
     model = Post
@@ -155,28 +154,30 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
-    
+
+
+# Advanced Features: Search & Tagging 
+
 def search_posts(request):
+    """Handles keyword searches across titles, content, and tags."""
     query = request.GET.get('q')
     if query:
-        # We use Q objects to search multiple fields with an 'OR' logic
-        # 'icontains' makes the search case-insensitive
+        # icontains makes the search case-insensitive
         posts = Post.objects.filter(
             Q(title__icontains=query) | 
             Q(content__icontains=query) |
             Q(tags__name__icontains=query)
         ).distinct()
     else:
-        # Returns an empty QuerySet if no query is provided
         posts = Post.objects.none()
         
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
 
 class PostByTagListView(ListView):
+    """Filters posts based on a specific tag slug from the URL."""
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
-        # self.kwargs gets the 'tag_slug' directly from the URL path
         return Post.objects.filter(tags__name__in=[self.kwargs.get('tag_slug')])

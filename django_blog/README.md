@@ -98,6 +98,6 @@ Created for ALX Django Learning Lab
 - Relationship: Uses a ForeignKey relationship between Post and Comment.
 
 ## Advanced Features
-
-- Tagging: Uses django-taggit. Users can add comma-separated tags when creating/editing posts.
-- Search: Implemented via Django Q objects to search titles, content, and tags simultaneously.
+- **Tagging:** Posts can be tagged using `django-taggit`. Use the 'tags' field in the post form.
+- **Search:** Users can search for posts by title, content, or tags using the search bar.
+- **Filtering:** Clicking on a tag badge filters posts by that specific tag.
