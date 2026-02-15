@@ -96,3 +96,8 @@ Created for ALX Django Learning Lab
 - Edit/Delete: Only the author of the comment can modify or remove it (enforced by UserPassesTestMixin).
 
 - Relationship: Uses a ForeignKey relationship between Post and Comment.
+
+## Advanced Features
+
+- Tagging: Uses django-taggit. Users can add comma-separated tags when creating/editing posts.
+- Search: Implemented via Django Q objects to search titles, content, and tags simultaneously.

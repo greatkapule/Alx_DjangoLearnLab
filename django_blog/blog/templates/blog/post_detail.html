@@ -58,3 +58,9 @@
         <a href="{% url 'post-list' %}" class="btn btn-secondary">Back to Posts</a>
     </div>
 {% endblock %}
+
+<p>Tags: 
+    {% for tag in post.tags.all %}
+        <a href="{% url 'posts-by-tag' tag.slug %}" class="badge badge-info">{{ tag.name }}</a>
+    {% endfor %}
+</p>

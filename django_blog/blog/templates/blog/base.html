@@ -119,3 +119,8 @@
     </div>
 </body>
 </html>
+
+<form action="{% url 'search-posts' %}" method="get">
+    <input type="text" name="q" placeholder="Search posts or tags...">
+    <button type="submit">Search</button>
+</form>

@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Post, Comment
 from .forms import PostForm, CommentForm
+from django.db.models import Q
 
 # Authentication Views 
 
@@ -154,3 +155,28 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
+    
+def search_posts(request):
+    query = request.GET.get('q')
+    if query:
+        # We use Q objects to search multiple fields with an 'OR' logic
+        # 'icontains' makes the search case-insensitive
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    else:
+        # Returns an empty QuerySet if no query is provided
+        posts = Post.objects.none()
+        
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        # self.kwargs gets the 'tag_slug' directly from the URL path
+        return Post.objects.filter(tags__name__in=[self.kwargs.get('tag_slug')])
