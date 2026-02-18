@@ -1,15 +1,11 @@
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework import generics, status
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate, get_user_model
 
-from .serializers import (
-    UserRegistrationSerializer,
-    UserLoginSerializer,
-    UserProfileSerializer,
-)
+from .serializers import UserLoginSerializer, UserProfileSerializer, UserRegistrationSerializer
 
 User = get_user_model()
 
@@ -44,12 +40,9 @@ class LoginView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         username = serializer.validated_data['username']
         password = serializer.validated_data['password']
-
         user = authenticate(username=username, password=password)
-
         if user:
             token, _ = Token.objects.get_or_create(user=user)
             return Response(
