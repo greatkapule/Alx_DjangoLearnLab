@@ -3,5 +3,8 @@ __pycache__/
 *.pyc
 *.pyo
 db.sqlite3
-*.log
+media/
 .env
+*.egg-info/
+dist/
+build/
