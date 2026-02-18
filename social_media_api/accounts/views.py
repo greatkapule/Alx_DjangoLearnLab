@@ -15,10 +15,6 @@ User = get_user_model()
 
 
 class RegisterView(generics.CreateAPIView):
-    """
-    POST /api/accounts/register/
-    Allows a new user to register and returns a token.
-    """
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
@@ -43,10 +39,6 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(APIView):
-    """
-    POST /api/accounts/login/
-    Authenticates a user and returns a token.
-    """
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -79,10 +71,6 @@ class LoginView(APIView):
 
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    """
-    GET /api/accounts/profile/   - View your profile
-    PUT /api/accounts/profile/   - Update your profile
-    """
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
