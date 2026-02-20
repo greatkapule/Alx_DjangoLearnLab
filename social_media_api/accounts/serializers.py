@@ -4,37 +4,23 @@ from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    token = serializers.SerializerMethodField(read_only=True)
+class UserSerializer(serializers.ModelSerializer):
+    # Use CharField for password as expected by standard DRF implementations
+    password = serializers.CharField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture', 'token']
-
-    def get_token(self, obj):
-        token, created = Token.objects.get_or_create(user=obj)
-        return token.key
+        fields = ('username', 'password', 'email', 'bio', 'profile_picture')
 
     def create(self, validated_data):
+        # Create user using the model manager to ensure password hashing
         user = User.objects.create_user(
             username=validated_data['username'],
-            email=validated_data.get('email', ''),
             password=validated_data['password'],
+            email=validated_data.get('email', ''),
             bio=validated_data.get('bio', ''),
-            profile_picture=validated_data.get('profile_picture', None),
+            profile_picture=validated_data.get('profile_picture', None)
         )
-        Token.objects.get_or_create(user=user)
+        # Create token specifically within the creation logic
+        Token.objects.create(user=user)
         return user
-
-
-class UserLoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
