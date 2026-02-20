@@ -2,4 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
-admin.site.register(CustomUser, UserAdmin)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('bio', 'profile_picture', 'followers')}),
+    )
+
+admin.site.register(CustomUser, CustomUserAdmin)

@@ -12,7 +12,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 class LoginView(ObtainAuthToken):
-    # This inherits the default post method that returns a token
+    # Standard token retrieval view
     pass
 
 class ProfileView(generics.RetrieveUpdateAPIView):
