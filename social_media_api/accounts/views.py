@@ -1,35 +1,36 @@
 from rest_framework import generics, permissions
-from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from .serializers import RegisterSerializer, UserSerializer
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from rest_framework.views import APIView
+from .serializers import RegisterSerializer, LoginSerializer
+from django.contrib.auth import authenticate
 
 class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
-
-class LoginView(generics.GenericAPIView):
+class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("username")
-        password = request.data.get("password")
-
-        user = authenticate(username=username, password=password)
-
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = authenticate(
+            username=serializer.validated_data['username'],
+            password=serializer.validated_data['password']
+        )
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({
-                "token": token.key
-            })
-        return Response({"error": "Invalid Credentials"}, status=400)
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
+        return Response({'error': 'Invalid credentials'}, status=400)
 
-
-class ProfileView(generics.RetrieveAPIView):
+class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserSerializer
 
-    def get_object(self):
-        return self.request.user
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'bio': getattr(user, 'bio', ''),
+            'profile_picture': getattr(user, 'profile_picture', None),
+            'followers': [follower.username for follower in user.followers.all()]
+        })
