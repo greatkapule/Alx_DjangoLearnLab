@@ -12,11 +12,11 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 class LoginView(ObtainAuthToken):
-    # Standard token retrieval view
+    # Built-in view that handles token retrieval
     pass
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-
+    
     def get_object(self):
         return self.request.user
