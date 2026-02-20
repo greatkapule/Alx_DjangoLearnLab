@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
 
+# Get the custom user model
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
-    # Use CharField for password as expected by standard DRF implementations
     password = serializers.CharField()
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'bio', 'profile_picture')
+        fields = ['username', 'password', 'email', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        # Create user using the model manager to ensure password hashing
+        # Use create_user to ensure password hashing
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
@@ -21,6 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
             bio=validated_data.get('bio', ''),
             profile_picture=validated_data.get('profile_picture', None)
         )
-        # Create token specifically within the creation logic
+        # Create a token for the user upon registration
         Token.objects.create(user=user)
         return user

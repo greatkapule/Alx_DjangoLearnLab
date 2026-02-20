@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer
 
@@ -12,12 +12,11 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 class LoginView(ObtainAuthToken):
-    # This built-in view handles token retrieval out of the box
+    # This inherits the default post method that returns a token
     pass
 
 class ProfileView(generics.RetrieveUpdateAPIView):
-    # This satisfies the requirement for user profile management
     serializer_class = UserSerializer
-    
+
     def get_object(self):
         return self.request.user
