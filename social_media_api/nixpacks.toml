@@ -1,0 +1,5 @@
+[phases.build]
+cmds = ["python3 manage.py collectstatic --noinput", "python3 manage.py migrate"]
+
+[start]
+cmd = "gunicorn social_media_api.wsgi --bind 0.0.0.0:$PORT"
