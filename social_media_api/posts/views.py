@@ -32,8 +32,8 @@ class FeedView(APIView):
 
     def get(self, request):
         # Get all users that the current user follows
-        followed_users = request.user.following.all()
+        following_users = request.user.following.all()
         # Get posts from those users ordered by newest first
-        posts = Post.objects.filter(author__in=followed_users).order_by('-created_at')
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
         serializer = PostSerializer(posts, many=True, context={'request': request})
         return Response(serializer.data)
