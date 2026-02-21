@@ -91,3 +91,23 @@ The `CustomUser` model extends Django's `AbstractUser` with:
 - `bio` — A short biography (text field)
 - `profile_picture` — An uploaded profile image
 - `followers` — ManyToMany self-referential field (asymmetric follows)
+
+## Follow & Feed Endpoints
+
+### Follow a User
+**POST** `/api/accounts/follow/{user_id}/`
+Header: `Authorization: Token your-token`
+
+Response: `{"message": "You are now following bob."}`
+
+### Unfollow a User
+**POST** `/api/accounts/unfollow/{user_id}/`
+Header: `Authorization: Token your-token`
+
+Response: `{"message": "You have unfollowed bob."}`
+
+### View Feed
+**GET** `/api/feed/`
+Header: `Authorization: Token your-token`
+
+Returns posts from all users you follow, ordered newest first.
