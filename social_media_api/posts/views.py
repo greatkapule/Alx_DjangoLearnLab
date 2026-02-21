@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, filters, status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
@@ -27,7 +28,6 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         comment = serializer.save(author=self.request.user)
-        # Create notification for post author when someone comments
         if comment.post.author != self.request.user:
             Notification.objects.create(
                 recipient=comment.post.author,
@@ -52,17 +52,12 @@ class LikePostView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
-
+        post = generics.get_object_or_404(Post, pk=pk)
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             return Response({'error': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create notification for post author
         if post.author != request.user:
             Notification.objects.create(
                 recipient=post.author,
@@ -79,14 +74,7 @@ class UnlikePostView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-        try:
-            like = Like.objects.get(user=request.user, post=post)
-            like.delete()
-            return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
-        except Like.DoesNotExist:
-            return Response({'error': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+        post = generics.get_object_or_404(Post, pk=pk)
+        like = get_object_or_404(Like, user=request.user, post=post)
+        like.delete()
+        return Response({'message': 'Post unliked successfully.'}, status=status.HTTP_200_OK)
