@@ -111,3 +111,20 @@ Response: `{"message": "You have unfollowed bob."}`
 Header: `Authorization: Token your-token`
 
 Returns posts from all users you follow, ordered newest first.
+
+## Likes & Notifications Endpoints
+
+### Like a Post
+**POST** `/api/posts/{id}/like/`
+Header: `Authorization: Token your-token`
+Response: `{"message": "Post liked successfully."}`
+
+### Unlike a Post
+**POST** `/api/posts/{id}/unlike/`
+Header: `Authorization: Token your-token`
+Response: `{"message": "Post unliked successfully."}`
+
+### View Notifications
+**GET** `/api/notifications/`
+Header: `Authorization: Token your-token`
+Response: List of notifications for the authenticated user, newest first.
