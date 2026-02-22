@@ -2,7 +2,6 @@ from django import forms
 from .models import Post, Comment
 from taggit.forms import TagWidget
 
-
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -17,12 +16,8 @@ class PostForm(forms.ModelForm):
                 'rows': 5,
                 'placeholder': 'Write your post content here...'
             }),
-            'tags': TagWidget(attrs={
-                'class': 'form-control',
-                'placeholder': 'Enter tags separated by commas (e.g., python, django, tutorial)'
-            }),
+            'tags': TagWidget(),
         }
-
 
 class CommentForm(forms.ModelForm):
     class Meta:
