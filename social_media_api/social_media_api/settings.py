@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from decouple import config
 import dj_database_url
@@ -9,6 +10,8 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-default-key-change-in
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+
+PORT = os.environ.get('PORT', 8000)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -86,6 +89,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
